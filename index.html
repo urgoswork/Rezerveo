@@ -2,6 +2,15 @@
 <html lang="cs">
 
 <head>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-PEVF7XRECC"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date());
+
+        gtag('config', 'G-PEVF7XRECC');
+    </script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Rezerveo - Prémiový Rezervační Systém</title>
@@ -46,27 +55,9 @@
                 </div>
             </div>
             <div class="hero-image-wrapper">
-                <!-- Placeholder for UI Mockup using CSS shapes for now -->
-                <div class="ui-mockup glass-card">
-                    <div class="mockup-header">
-                        <div class="dots">
-                            <span></span><span></span><span></span>
-                        </div>
-                    </div>
-                    <div class="mockup-body">
-                        <div class="calendar-grid">
-                            <div class="day"></div>
-                            <div class="day"></div>
-                            <div class="day"></div>
-                            <div class="day active"></div>
-                            <div class="day"></div>
-                            <div class="day"></div>
-                        </div>
-                        <div class="stats-row">
-                            <div class="stat-bar"></div>
-                            <div class="stat-bar short"></div>
-                        </div>
-                    </div>
+                <div class="hero-carousel">
+                    <img src="dashboard-mockup.png" alt="Rezerveo Dashboard" class="carousel-slide active">
+                    <img src="customer-mockup.png" alt="Rezerveo Mobile Booking" class="carousel-slide">
                 </div>
             </div>
         </div>
@@ -113,6 +104,8 @@
         </div>
     </section>
 
+
+
     <section id="pricing" class="pricing">
         <div class="container">
             <h2 class="section-title">Vyberte si svůj plán</h2>
@@ -128,6 +121,7 @@
                         <li><span class="check">✓</span> Až 50 rezervací měsíčně</li>
                         <li><span class="check">✓</span> 1 kalendář</li>
                         <li><span class="check">✓</span> Základní podpora</li>
+                        <li><span class="check">✓</span> Emailové připomínky</li>
                     </ul>
                     <a href="#" class="btn-secondary full-width" data-plan="free">Začít Zdarma</a>
                 </div>
@@ -143,8 +137,8 @@
                     <ul class="features-list">
                         <li><span class="check">✓</span> Neomezené rezervace</li>
                         <li><span class="check">✓</span> 5 kalendářů</li>
-                        <li><span class="check">✓</span> SMS připomínky</li>
                         <li><span class="check">✓</span> Prioritní podpora</li>
+                        <li><span class="check">✓</span> Emailové připomínky</li>
                     </ul>
                     <a href="#" class="btn-primary full-width" data-plan="paid">Vybrat Profi</a>
                 </div>
@@ -157,10 +151,10 @@
                         <p class="plan-desc">Maximální výkon.</p>
                     </div>
                     <ul class="features-list">
-                        <li><span class="check">✓</span> Vše z Profi</li>
                         <li><span class="check">✓</span> Neomezeno kalendářů</li>
                         <li><span class="check">✓</span> Vlastní branding</li>
                         <li><span class="check">✓</span> API přístup</li>
+                        <li><span class="check">✓</span> Emailové a SMS připomínky</li>
                     </ul>
                     <a href="#" class="btn-secondary full-width" data-plan="paid">Kontaktovat Nás</a>
                 </div>
@@ -168,13 +162,12 @@
         </div>
     </section>
 
-    <footer class="footer">
+    <footer id="contact" class="footer">
         <div class="container">
             <div class="footer-content">
                 <div class="footer-logo">Rezerveo</div>
                 <div class="footer-links">
-                    <a href="#">Ochrana soukromí</a>
-                    <a href="#">Obchodní podmínky</a>
+                    <a href="mailto:rezerveocz@gmail.com">rezerveocz@gmail.com</a>
                 </div>
                 <div class="copyright">© 2025 Rezerveo System. Všechna práva vyhrazena.</div>
             </div>
@@ -195,8 +188,9 @@
                 </div>
             </div>
             <form id="waitlist-form" class="waitlist-form">
-                <input type="email" placeholder="Váš email" required class="glass-input">
-                <button type="submit" class="btn-primary full-width">Chci vědět víc</button>
+                <input type="hidden" name="plan" id="selected-plan" value="">
+                <input type="email" name="email" placeholder="Váš email" required class="glass-input">
+                <button type="submit" class="btn-primary full-width">Mám zájem</button>
             </form>
         </div>
     </div>

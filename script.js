@@ -51,7 +51,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const closeBtn = document.querySelector('.modal-close');
     const form = document.getElementById('waitlist-form');
     const discountMsg = document.getElementById('discount-message');
+    const planInput = document.getElementById('selected-plan');
     const navButtons = document.querySelectorAll('.pricing-card .btn-primary, .pricing-card .btn-secondary, .hero-buttons .btn-primary');
+
+    const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzRTsiP0Ftxj7GxvfJu7bW-GTH2VwjYHWw0HOmCt0dfqHTvWhLiYI9gdngpHG41-ODV/exec';
 
     const openModal = (e) => {
         if (e) e.preventDefault();
@@ -59,9 +62,28 @@ document.addEventListener('DOMContentLoaded', () => {
         // Reset state
         discountMsg.classList.remove('visible');
 
-        // Check for plan type
+        // Check for plan type & name
         const btn = e.currentTarget;
         const planType = btn.dataset.plan;
+
+        // Try to find the plan name from the card, or default to general interest
+        const card = btn.closest('.pricing-card');
+        const planName = card ? card.querySelector('h3').textContent : 'Obecný zájem';
+
+        if (planInput) {
+            planInput.value = planName;
+        }
+
+        // Track click anonymously
+        const clickData = new FormData();
+        clickData.append('plan', planName);
+        clickData.append('email', '-'); // Mark as click only
+
+        fetch(SCRIPT_URL, {
+            method: 'POST',
+            body: clickData,
+            mode: 'no-cors'
+        }).catch(err => console.error('Tracking error:', err));
 
         if (planType === 'paid') {
             discountMsg.classList.add('visible');
@@ -76,11 +98,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Open modal on pricing clicks and "Start Free"
     navButtons.forEach(btn => {
-        // Exclude "Contact Us" if it should go somewhere else, but for now map all to modal as per request "choosing a plan"
-        // Also the hero button "Start Free" points to pricing anchor, but let's intercept it if it's meant to trigger sign up immediately? 
-        // The prompt said "Po výběru nějakého z plánů" (After choosing a plan).
-        // Let's target buttons inside pricing logic explicitly, plus the hero main CTA if they want.
-        // Actually, let's stick to the prompt: plan selection.
         btn.addEventListener('click', openModal);
     });
 
@@ -94,23 +111,51 @@ document.addEventListener('DOMContentLoaded', () => {
     // Form Submit
     form.addEventListener('submit', (e) => {
         e.preventDefault();
-        const input = form.querySelector('input');
         const btn = form.querySelector('button');
         const originalText = btn.textContent;
 
-        // Simulate API call
         btn.textContent = 'Odesílám...';
         btn.disabled = true;
 
-        setTimeout(() => {
-            btn.textContent = 'Děkujeme!';
-            input.value = '';
+        fetch(SCRIPT_URL, {
+            method: 'POST',
+            body: new FormData(form),
+            mode: 'no-cors' // Important for Google Apps Script to avoid CORS errors (opacity response)
+        })
+            .then(() => {
+                btn.textContent = 'Děkujeme!';
+                form.reset();
 
-            setTimeout(() => {
-                closeModal();
-                btn.textContent = originalText;
-                btn.disabled = false;
-            }, 1000);
-        }, 1500);
+                setTimeout(() => {
+                    closeModal();
+                    btn.textContent = originalText;
+                    btn.disabled = false;
+                }, 2000);
+            })
+            .catch(error => {
+                console.error('Error!', error.message);
+                btn.textContent = 'Chyba!';
+                setTimeout(() => {
+                    btn.textContent = originalText;
+                    btn.disabled = false;
+                }, 3000);
+            });
     });
+
+    // Hero Carousel Logic
+    const slides = document.querySelectorAll('.carousel-slide');
+    if (slides.length > 0) {
+        let currentSlide = 0;
+
+        // Ensure first is active if not set
+        if (!document.querySelector('.carousel-slide.active')) {
+            slides[0].classList.add('active');
+        }
+
+        setInterval(() => {
+            slides[currentSlide].classList.remove('active');
+            currentSlide = (currentSlide + 1) % slides.length;
+            slides[currentSlide].classList.add('active');
+        }, 5000); // 5 seconds
+    }
 });
